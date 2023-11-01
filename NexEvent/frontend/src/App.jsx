@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import "./App.css";
+import Navbar from "./components/navbar/Navbar";
 
-function App() {
-  useEffect(() => {
-    fetch("http://localhost:8000/api/")
-      .then((res) => res.json())
-      .then((data) => console.log(data));
-  }, []);
+export default function App() {
+  return (
+    <div className="App">
+      <Navbar />
+    </div>
+  );
 }
-
-export default App;
