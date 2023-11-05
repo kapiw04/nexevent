@@ -1,18 +1,25 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
+import Navbar from "./components/navbar/Navbar";
 import Login from "./views/Login";
 import Home from "./views/Home";
 import Signup from "./views/SignUp";
+import EventDetails from "./views/EventDetails";
 
 export default function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-      </Routes>
-    </Router>
+    <>
+      <Navbar />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="*" element={<h1>Not Found</h1>} />
+          <Route path="/event/:id" element={<EventDetails />} />
+        </Routes>
+      </Router>
+    </>
   );
 }

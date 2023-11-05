@@ -20,7 +20,7 @@ function Navbar() {
 
   if (isLoggedIn) {
     return (
-      <nav className="grid-cols-2 p-1">
+      <nav className="grid-cols-2 p-1 shadow-md">
         <div className="flex justify-between items-center">
           <img src={logo} alt="" className="w-32" />
           <div className="flex items-center space-x-4">

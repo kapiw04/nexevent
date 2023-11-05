@@ -10,10 +10,13 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/api/login/", {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:8000/api/users/login/",
+        {
+          username,
+          password,
+        }
+      );
       console.log(response);
       localStorage.setItem("token", response.data.token);
       window.location.href = "/";

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import NavbarButton from "../components/navbar/NavbarButton";
 import Navbar from "../components/navbar/Navbar";
+import EventCard from "../components/events/EventCard";
 
 export default function Home() {
   const [userData, setUserData] = useState(null);
@@ -13,7 +14,7 @@ export default function Home() {
       if (token) {
         try {
           const response = await axios.get(
-            "http://localhost:8000/api/current-user/",
+            "http://localhost:8000/api/users/current-user/",
             {
               headers: {
                 Authorization: `Token ${token}`,
@@ -39,18 +40,37 @@ export default function Home() {
 
   return (
     <div>
-      <Navbar />
-      <h1>Home</h1>
-      {isLoggedIn ? (
-        <h2>Welcome, {userData.username}!</h2>
-      ) : (
-        <>
-          <h2>Welcome, guest!</h2>
-          {error && <p className="error">{error}</p>}{" "}
-          {/* Show error message if any */}
-          <NavbarButton outline={false} to="/login" />
-        </>
-      )}
+      <EventSection />
+    </div>
+  );
+}
+
+function EventSection() {
+  const [events, setEvents] = useState([]);
+
+  const fetchEvents = async () => {
+    const response = await axios.get("http://localhost:8000/api/events/");
+    setEvents(response.data);
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  return (
+    <div>
+      <div className="flex justify-center flex-wrap">
+        {events.map((event) => (
+          <EventCard
+            key={event.id}
+            id={event.id}
+            name={event.name}
+            description={event.description}
+            date={event.date}
+            location={event.location}
+          />
+        ))}
+      </div>
     </div>
   );
 }
