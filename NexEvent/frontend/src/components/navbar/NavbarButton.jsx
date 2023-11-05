@@ -1,6 +1,5 @@
 export default function NavbarButton(props) {
   if (props.outline === true) {
-    console.log("outline is true for " + props.children + " button");
     return (
       <div className="flex align-middle p-8">
         <button
@@ -16,7 +15,10 @@ export default function NavbarButton(props) {
   } else {
     return (
       <div className="flex align-middle p-8">
-        <button className="text-2xl" onClick={props.onClick}>
+        <button
+          className="relative text-2xl w-fit block after:block after:content-[''] after:absolute after:h-[3px] after:bg-black after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-left"
+          onClick={props.onClick}
+        >
           <span className="">{props.children}</span>
         </button>
       </div>
