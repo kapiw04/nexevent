@@ -98,3 +98,10 @@ class JoinEvent(APIView):
         event = self.get_object(pk)
         event.attendees.add(request.user)
         return Response(status=status.HTTP_200_OK)
+
+
+class UsersEvents(APIView):
+    def get(self, request):
+        events = Event.objects.filter(attendees=request.user)
+        serializer = EventSerializer(events, many=True)
+        return Response(serializer.data)

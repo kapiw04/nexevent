@@ -6,6 +6,8 @@ from rest_framework import status
 from rest_framework import generics
 from rest_framework import permissions
 from .serializers import UserSerializer
+from .models import UserProfile
+from apps.events.serializers import EventSerializer
 
 
 class LoginView(APIView):
@@ -26,6 +28,11 @@ class CurrentUserView(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+
+    def get(self, request):
+        user = self.get_object()
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
 
 
 class RegisterView(APIView):

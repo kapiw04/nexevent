@@ -29,3 +29,6 @@ class Event(models.Model):
     def add_attendee(self, user):
         self.attendees.add(user)
         self.save()
+
+    def get_attendees(self):
+        return self.attendees.all()

@@ -1,6 +1,5 @@
 import NavbarButton from "./NavbarButton";
 import logo from "../../assets/nexevent-logo.png";
-import React, { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/AuthContext";
 
 function Navbar() {
@@ -19,14 +18,16 @@ function Navbar() {
           >
             Home
           </NavbarButton>
-          <NavbarButton
-            onClick={() => {
-              console.log("Events button clicked!");
-            }}
-            outline={false}
-          >
-            Events
-          </NavbarButton>
+          {isLoggedIn ? (
+            <NavbarButton
+              onClick={() => {
+                window.location.href = "/my-events";
+              }}
+              outline={false}
+            >
+              My Events
+            </NavbarButton>
+          ) : null}
         </div>
         {isLoggedIn ? (
           <NavbarButton

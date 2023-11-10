@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import NavbarButton from "../components/navbar/NavbarButton";
-import Navbar from "../components/navbar/Navbar";
-import EventCard from "../components/events/EventCard";
+import EventSection from "../components/events/EventSection";
 
 export default function Home() {
-  const [userData, setUserData] = useState(null);
-
   useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem("token");
@@ -20,7 +16,6 @@ export default function Home() {
               },
             }
           );
-          setUserData(response.data);
         } catch (error) {
           console.error(
             "Error fetching user data:",
@@ -35,14 +30,6 @@ export default function Home() {
     fetchUserData();
   }, []);
 
-  return (
-    <div>
-      <EventSection />
-    </div>
-  );
-}
-
-function EventSection() {
   const [events, setEvents] = useState([]);
 
   const fetchEvents = async () => {
@@ -56,18 +43,8 @@ function EventSection() {
 
   return (
     <div>
-      <div className="flex justify-center flex-wrap">
-        {events.map((event) => (
-          <EventCard
-            key={event.id}
-            id={event.id}
-            name={event.name}
-            description={event.description}
-            date={event.start_date}
-            location={event.location}
-          />
-        ))}
-      </div>
+      <EventSection events={events} />
     </div>
   );
 }
+

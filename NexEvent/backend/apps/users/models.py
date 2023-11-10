@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from apps.events.models import Event
 # Create your models here.
 
 
@@ -14,3 +14,6 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    def get_user_events(self):
+        return Event.objects.filter(self.user in Event.attendees.all())
