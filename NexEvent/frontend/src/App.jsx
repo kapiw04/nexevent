@@ -6,20 +6,23 @@ import Login from "./views/Login";
 import Home from "./views/Home";
 import Signup from "./views/SignUp";
 import EventDetails from "./views/EventDetails";
+import { AuthProvider } from "./hooks/AuthContext";
 
 export default function App() {
   return (
     <>
-      <Navbar />
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="*" element={<h1>Not Found</h1>} />
-          <Route path="/event/:id" element={<EventDetails />} />
-        </Routes>
-      </Router>
+      <AuthProvider>
+        <Navbar />
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="*" element={<h1>Not Found</h1>} />
+            <Route path="/event/:id" element={<EventDetails />} />
+          </Routes>
+        </Router>
+      </AuthProvider>
     </>
   );
 }

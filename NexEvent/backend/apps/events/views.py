@@ -85,3 +85,16 @@ class EventAttendees(APIView):
 #         owner = event.owner
 #         serializer = EventSerializer(owner)
 #         return Response(serializer.data)
+
+
+class JoinEvent(APIView):
+    def get_object(self, pk):
+        try:
+            return Event.objects.get(pk=pk)
+        except Event.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def post(self, request, pk):
+        event = self.get_object(pk)
+        event.attendees.add(request.user)
+        return Response(status=status.HTTP_200_OK)

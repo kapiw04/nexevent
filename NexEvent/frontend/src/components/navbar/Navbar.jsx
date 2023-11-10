@@ -1,27 +1,10 @@
 import NavbarButton from "./NavbarButton";
 import logo from "../../assets/nexevent-logo.png";
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../../hooks/AuthContext";
 
 function Navbar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
-
-  useEffect(() => {
-    const handleTokenChange = (event) => {
-      console.log('Storage event', event);
-    };
-
-    window.addEventListener('tokenChanged', handleTokenChange);
-
-    // Initial check on mount
-    setIsLoggedIn(!!localStorage.getItem("token"));
-
-    return () => {
-      window.removeEventListener('tokenChanged', handleTokenChange);
-    };
-  }, []);
-
-
-
+  const { isLoggedIn, logOut } = useAuth();
 
   return (
     <nav className="grid-cols-2 p-1 shadow-md">
@@ -49,8 +32,7 @@ function Navbar() {
           <NavbarButton
             onClick={() => {
               localStorage.removeItem("token");
-              window.dispatchEvent(new Event("tokenChanged"));
-              setIsLoggedIn(false);
+              logOut();
             }}
             outline={true}
           >

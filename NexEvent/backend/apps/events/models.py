@@ -25,3 +25,7 @@ class Event(models.Model):
 
     def __str__(self):
         return self.name
+
+    def add_attendee(self, user):
+        self.attendees.add(user)
+        self.save()

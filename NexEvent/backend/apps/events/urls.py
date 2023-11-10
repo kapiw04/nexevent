@@ -5,4 +5,5 @@ urlpatterns = [
     path('', views.EventList.as_view()),
     path('<int:pk>/', views.EventDetail.as_view()),
     path('<int:pk>/attendees/', views.EventAttendees.as_view()),
+    path('join/<int:pk>/', views.JoinEvent.as_view()),
 ]

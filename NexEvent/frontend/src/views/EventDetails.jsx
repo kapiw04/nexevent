@@ -3,13 +3,14 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Button from "../components/UI/Button";
 import LoginModal from "../components/utils/LoginModal";
+import { useAuth } from "../hooks/AuthContext";
 
 export default function EventDetails() {
   const { id } = useParams();
   const [eventData, setEventData] = useState(null);
   const [userData, setUserData] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn } = useAuth();
 
   const fetchUserData = async () => {
     const token = localStorage.getItem("token");
@@ -24,7 +25,6 @@ export default function EventDetails() {
           }
         );
         setUserData(response.data);
-        setIsLoggedIn(true);
       } catch (error) {
         console.error(
           "Error fetching user data:",
@@ -32,7 +32,6 @@ export default function EventDetails() {
         );
         setError("Failed to fetch user data. Please log in again.");
         localStorage.removeItem("token");
-        setIsLoggedIn(false);
       }
     }
   };
@@ -40,14 +39,24 @@ export default function EventDetails() {
     fetchUserData();
   }, []);
 
-  useEffect(() => {
-    fetchUserData();
-  }, [showLoginModal]);
-
 
   const handleJoinEvent = async (eventId) => {
     if (!isLoggedIn) {
       setShowLoginModal(true);
+    }
+    else {
+      try {
+        await axios.post("http://localhost:8000/api/events/join/" + eventId + '/', {}, {
+          headers: {
+            Authorization: `Token ${localStorage.getItem("token")}`,
+          },
+        });
+        alert("Joined event successfully!");
+      }
+      catch (error) {
+        console.error("Error joining event:", error.response || error.message);
+      }
+
     }
   };
 
@@ -92,14 +101,14 @@ export default function EventDetails() {
           </div>
           <div>
             <h2 className="text-4xl font-semibold mt-16">Date and Time</h2>
-            <p className="grid-cols-6 text-2xl mt-2 p-4 pr-12 shadow-xl rounded-2xl border">
+            <div className="grid-cols-6 text-2xl mt-2 p-4 pr-12 shadow-xl rounded-2xl border">
               {eventData ? eventData.start_date : "Loading..."} to{" "}
               {eventData ? eventData.end_date : "Loading..."}
               <p className="text-gray-500 font-thin">
                 {eventData ? eventData.start_time : "Loading..."} to{" "}
                 {eventData ? eventData.end_time : "Loading..."}
               </p>
-            </p>
+            </div>
           </div>
           <div>
             <h2 className="text-4xl font-semibold mt-16">Location</h2>

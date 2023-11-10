@@ -2,10 +2,12 @@ import NavbarButton from "../components/navbar/NavbarButton";
 import { useState } from "react";
 import axios from "axios";
 import logo from "../assets/nexevent-logo.png";
+import { useAuth } from "../hooks/AuthContext";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { isLoggedIn, logIn, logOut } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -19,7 +21,8 @@ export default function Login() {
       );
       console.log(response);
       localStorage.setItem("token", response.data.token);
-      window.dispatchEvent(new Event("tokenChanged"));
+      logIn();
+
       window.location.href = "/";
     } catch (error) {
       console.error("Error logging in:", error);

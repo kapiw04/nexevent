@@ -1,12 +1,14 @@
 import { useState } from "react";
 import axios from "axios";
 import NavbarButton from "../navbar/NavbarButton";
+import { useAuth } from "../../hooks/AuthContext";
 
 export default function LoginModal({ setShowLoginModal }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const { logIn } = useAuth();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -21,7 +23,7 @@ export default function LoginModal({ setShowLoginModal }) {
                 }
             );
             localStorage.setItem("token", response.data.token);
-            window.dispatchEvent(new Event("loginSuccess"));
+            logIn();
             setShowLoginModal(false);
             console.log("Logged in successfully!");
         } catch (error) {
