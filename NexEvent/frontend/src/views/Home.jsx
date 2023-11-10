@@ -6,7 +6,6 @@ import EventCard from "../components/events/EventCard";
 
 export default function Home() {
   const [userData, setUserData] = useState(null);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -28,15 +27,13 @@ export default function Home() {
             error.response || error.message
           );
           setError("Failed to fetch user data. Please log in again.");
-          localStorage.removeItem("token"); // Clear token as it might be invalid
+          localStorage.removeItem("token");
         }
       }
     };
 
     fetchUserData();
   }, []);
-
-  const isLoggedIn = userData != null;
 
   return (
     <div>
@@ -66,7 +63,7 @@ function EventSection() {
             id={event.id}
             name={event.name}
             description={event.description}
-            date={event.date}
+            date={event.start_date}
             location={event.location}
           />
         ))}

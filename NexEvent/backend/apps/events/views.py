@@ -10,34 +10,10 @@ from .models import Event
 # Create your views here.
 
 
-def get_date(date):
-    months = {
-        '01': 'Jan',
-        '02': 'Feb',
-        '03': 'Mar',
-        '04': 'Apr',
-        '05': 'May',
-        '06': 'Jun',
-        '07': 'Jul',
-        '08': 'Aug',
-        '09': 'Sep',
-        '10': 'Oct',
-        '11': 'Nov',
-        '12': 'Dec',
-    }
-    date = date.split('T')[0]
-    date = date.split('-')
-    date[1] = months[date[1]]
-    date = [date[2], date[1], date[0]]
-    return ' '.join(date)
-
-
 class EventList(APIView):
     def get(self, request):
         events = Event.objects.all()
         serializer = EventSerializer(events, many=True)
-        for event in serializer.data:
-            event["date"] = get_date(event["start_date"])
         return Response(serializer.data)
 
     def post(self, request):
@@ -60,10 +36,7 @@ class EventDetail(APIView):
     def get(self, request, pk):
         event = self.get_object(pk)
         serializer = EventSerializer(event)
-        data = serializer.data.copy()
-        data["start_date"] = get_date(data["start_date"])
-        data["end_date"] = get_date(data["end_date"])
-        return Response(data)
+        return Response(serializer.data)
 
     def put(self, request, pk):
         event = self.get_object(pk)

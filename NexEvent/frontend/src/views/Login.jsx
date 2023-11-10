@@ -19,6 +19,7 @@ export default function Login() {
       );
       console.log(response);
       localStorage.setItem("token", response.data.token);
+      window.dispatchEvent(new Event("tokenChanged"));
       window.location.href = "/";
     } catch (error) {
       console.error("Error logging in:", error);

@@ -6,77 +6,57 @@ function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
 
   useEffect(() => {
-    const handleStorageChange = () => {
-      console.log("Storage changed!");
-      setIsLoggedIn(!!localStorage.getItem("token"));
+    const handleTokenChange = (event) => {
+      console.log('Storage event', event);
     };
 
-    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener('tokenChanged', handleTokenChange);
+
+    // Initial check on mount
+    setIsLoggedIn(!!localStorage.getItem("token"));
 
     return () => {
-      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener('tokenChanged', handleTokenChange);
     };
   }, []);
 
-  if (isLoggedIn) {
-    return (
-      <nav className="grid-cols-2 p-1 shadow-md">
-        <div className="flex justify-between items-center">
-          <img src={logo} alt="" className="w-32" />
-          <div className="flex items-center space-x-4">
-            <NavbarButton
-              onClick={() => {
-                window.location.href = "/";
-              }}
-              outline={false}
-            >
-              Home
-            </NavbarButton>
-            <NavbarButton
-              onClick={() => {
-                console.log("Events button clicked!");
-              }}
-              outline={false}
-            >
-              Events
-            </NavbarButton>
-          </div>
+
+
+
+  return (
+    <nav className="grid-cols-2 p-1 shadow-md">
+      <div className="flex justify-between items-center">
+        <img src={logo} alt="" className="w-32" />
+        <div className="flex items-center space-x-4">
+          <NavbarButton
+            onClick={() => {
+              window.location.href = "/";
+            }}
+            outline={false}
+          >
+            Home
+          </NavbarButton>
+          <NavbarButton
+            onClick={() => {
+              console.log("Events button clicked!");
+            }}
+            outline={false}
+          >
+            Events
+          </NavbarButton>
+        </div>
+        {isLoggedIn ? (
           <NavbarButton
             onClick={() => {
               localStorage.removeItem("token");
+              window.dispatchEvent(new Event("tokenChanged"));
               setIsLoggedIn(false);
-              window.location.href = "/";
             }}
             outline={true}
           >
             Log Out
           </NavbarButton>
-        </div>
-      </nav>
-    );
-  } else {
-    return (
-      <nav className="grid-cols-2 p-1">
-        <div className="flex justify-between items-center">
-          <img src={logo} alt="" className="w-32" />
-          <div className="flex items-center space-x-4">
-            <NavbarButton
-              onClick={() => {
-                window.location.href = "/";
-              }}
-              outline={false}
-            >
-              Home
-            </NavbarButton>
-            <NavbarButton
-              onClick={() => {
-                console.log("Events button clicked!");
-              }}
-              outline={false}
-            >
-              Events
-            </NavbarButton>
-          </div>
+        ) : (
           <div className="flex ">
             <NavbarButton
               onClick={() => {
@@ -95,10 +75,12 @@ function Navbar() {
               Sign up
             </NavbarButton>
           </div>
-        </div>
-      </nav>
-    );
-  }
+        )
+        }
+      </div>
+    </nav>
+  );
 }
+
 
 export default Navbar;

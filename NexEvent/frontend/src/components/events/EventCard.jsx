@@ -12,17 +12,17 @@ export default function EventCard(props) {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-gray-100 rounded-3xl w-3/5 p-28 m-8 flex justify-between relative items-center">
+    <div className="relative m-8 flex w-3/5 items-center justify-between rounded-3xl bg-gray-100 p-28">
       <img
         src="https://picsum.photos/400" // src={image}
         alt=""
-        className="p-6 rounded-lg shadow-lg absolute left-0 -ml-64"
+        className="absolute left-0 -ml-64 rounded-lg p-6 shadow-lg"
       />
-      <div className="flex flex-col ml-24 w-full">
+      <div className="ml-24 flex w-full flex-col">
         <span className="p-2 text-gray-500">{date}</span>
-        <span className="font-bold p-2 text-5xl">{name}</span>
+        <span className="p-2 text-5xl font-bold">{name}</span>
         <p className="p-2 text-lg">{description}</p>
-        <div className="flex flex-row mt-12 justify-between items-center">
+        <div className="mt-12 flex flex-row items-center justify-between">
           <Button
             onClick={() => {
               navigate(`/event/${id}/`);
@@ -30,12 +30,12 @@ export default function EventCard(props) {
           >
             Read More
           </Button>
-          <span className="p-2 text-xl text-gray-500 flex mr-12">
+          <span className="mr-12 flex p-2 text-xl text-gray-500">
             <svg
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="w-6 h-6 mr-2"
+              className="mr-2 h-6 w-6"
             >
               <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
               <g
