@@ -1,54 +1,49 @@
 import EventSection from "../components/events/EventSection";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { AuthContext } from "../hooks/AuthContext";
 
 export default function MyEvents() {
     const [events, setEvents] = useState([]);
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            const token = localStorage.getItem("token");
-            if (token) {
-                try {
-                    const response = await axios.get(
-                        "http://localhost:8000/api/users/current-user/",
-                        {
-                            headers: {
-                                Authorization: `Token ${token}`,
-                            },
-                        }
-                    );
-                } catch (error) {
-                    console.error(
-                        "Error fetching user data:",
-                        error.response || error.message
-                    );
-                    setError("Failed to fetch user data. Please log in again.");
-                    localStorage.removeItem("token");
-                }
-            }
-        };
-
-        fetchUserData();
-    }, []);
+    const { isLoggedIn, logIn, logOut } = useContext(AuthContext);
 
     useEffect(() => {
         const fetchEvents = async () => {
-            const response = await axios.get("http://localhost:8000/api/events/users-events/", {
-                headers: {
-                    Authorization: `Token ${localStorage.getItem("token")}`,
-                },
+            try {
+                const response = await axios.get("http://localhost:8000/api/events/users-events/", {
+                    headers: {
+                        Authorization: `Token ${localStorage.getItem("token")}`,
+                    },
+                });
+                setEvents(response.data);
+            } catch (error) {
+                console.error(error);
+                window.location.href = "/login";
             }
-            );
-            setEvents(response.data);
         }
-
         fetchEvents();
     }, []);
 
-    return (
-        <div>
-            <EventSection events={events} />
-        </div>
-    );
+    useEffect(() => {
+        if (!isLoggedIn) {
+            window.location.href = "/login";
+        }
+    }, [isLoggedIn]);
+
+
+
+    if (events.length === 0) {
+        return (
+            <div>
+                <h1 className="text-3xl text-center mt-16">You have no events</h1>
+            </div >
+        );
+    }
+    else {
+        return (
+            <div>
+                <EventSection events={events} />
+            </div>
+        );
+    }
 }

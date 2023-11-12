@@ -8,37 +8,9 @@ import { useAuth } from "../hooks/AuthContext";
 export default function EventDetails() {
   const { id } = useParams();
   const [eventData, setEventData] = useState(null);
-  const [userData, setUserData] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const { isLoggedIn } = useAuth();
-
-  const fetchUserData = async () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const response = await axios.get(
-          "http://localhost:8000/api/users/current-user/",
-          {
-            headers: {
-              Authorization: `Token ${token}`,
-            },
-          }
-        );
-        setUserData(response.data);
-      } catch (error) {
-        console.error(
-          "Error fetching user data:",
-          error.response || error.message
-        );
-        setError("Failed to fetch user data. Please log in again.");
-        localStorage.removeItem("token");
-      }
-    }
-  };
-  useEffect(() => {
-    fetchUserData();
-  }, []);
-
+  const [isJoined, setIsJoined] = useState(false);
 
   const handleJoinEvent = async (eventId) => {
     if (!isLoggedIn) {
@@ -51,6 +23,7 @@ export default function EventDetails() {
             Authorization: `Token ${localStorage.getItem("token")}`,
           },
         });
+        setIsJoined(true);
         alert("Joined event successfully!");
       }
       catch (error) {
@@ -59,6 +32,20 @@ export default function EventDetails() {
 
     }
   };
+  const handleLeaveEvent = async (eventId) => {
+    try {
+      await axios.post("http://localhost:8000/api/events/leave/" + eventId + '/', {}, {
+        headers: {
+          Authorization: `Token ${localStorage.getItem("token")}`,
+        },
+      });
+      setIsJoined(false);
+      alert("Left event successfully!");
+    }
+    catch (error) {
+      console.error("Error leaving event:", error.response || error.message);
+    }
+  }
 
   useEffect(() => {
     const fetchEventData = async () => {
@@ -75,6 +62,28 @@ export default function EventDetails() {
       }
     };
     fetchEventData();
+  }, []);
+
+  useEffect(() => {
+    const fetchIsJoined = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/events/is-attending/` + id + `/`, {
+          headers: {
+            Authorization: `Token ${localStorage.getItem("token")}`,
+          },
+        }
+        );
+        console.log(response.data.is_attending);
+        response.data.is_attending ? setIsJoined(true) : setIsJoined(false);
+      } catch (error) {
+        console.error(
+          "Error fetching event data:",
+          error.response || error.message
+        );
+      }
+    };
+    fetchIsJoined();
   }, []);
 
   return (
@@ -117,10 +126,16 @@ export default function EventDetails() {
             </p>
           </div>
           <div className="mt-16 flex justify-center items-center w-full">
-            <Button
+            {isJoined ? (
+              <Button
+                onClick={() => handleLeaveEvent(eventData.id)}
+              >
+                Leave Event</Button>
+            ) : (<Button
               onClick={() => handleJoinEvent(eventData.id)}
             >
-              Join Event</Button>
+              Join Event</Button>)
+            }
           </div>
         </div>
       </div >

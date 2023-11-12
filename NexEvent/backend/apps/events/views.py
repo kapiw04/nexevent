@@ -100,8 +100,30 @@ class JoinEvent(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
+class LeaveEvent(APIView):
+    def get_object(self, pk):
+        try:
+            return Event.objects.get(pk=pk)
+        except Event.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def post(self, request, pk):
+        event = self.get_object(pk)
+        event.attendees.remove(request.user)
+        return Response(status=status.HTTP_200_OK)
+
+
 class UsersEvents(APIView):
     def get(self, request):
         events = Event.objects.filter(attendees=request.user)
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
+
+
+class IsAttending(APIView):
+    def get(self, request, pk):
+        event = Event.objects.get(pk=pk)
+        if request.user in event.attendees.all():
+            return Response({"is_attending": True})
+        else:
+            return Response({"is_attending": False})

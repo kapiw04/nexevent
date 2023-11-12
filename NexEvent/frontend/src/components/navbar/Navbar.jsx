@@ -6,29 +6,32 @@ function Navbar() {
   const { isLoggedIn, logOut } = useAuth();
 
   return (
-    <nav className="grid-cols-2 p-1 shadow-md">
-      <div className="flex justify-between items-center">
+    <nav className="grid grid-cols-3 p-1 shadow-md">
+      <div className="flex justify-start">
         <img src={logo} alt="" className="w-32" />
-        <div className="flex items-center space-x-4">
+      </div>
+      <div className="flex justify-center">
+        <NavbarButton
+          onClick={() => {
+            window.location.href = "/";
+          }}
+          outline={false}
+        >
+          Home
+        </NavbarButton>
+        {isLoggedIn ? (
           <NavbarButton
             onClick={() => {
-              window.location.href = "/";
+              window.location.href = "/my-events";
             }}
             outline={false}
           >
-            Home
+            My Events
           </NavbarButton>
-          {isLoggedIn ? (
-            <NavbarButton
-              onClick={() => {
-                window.location.href = "/my-events";
-              }}
-              outline={false}
-            >
-              My Events
-            </NavbarButton>
-          ) : null}
-        </div>
+        ) : null}
+      </div>
+
+      <div className="flex justify-end">
         {isLoggedIn ? (
           <NavbarButton
             onClick={() => {
@@ -61,7 +64,7 @@ function Navbar() {
         )
         }
       </div>
-    </nav>
+    </nav >
   );
 }
 
